@@ -23,6 +23,7 @@ void T_TronSaveNoticeToDatabaseDlg::initializeGUI()
 	m_ui = new Ui_tronSaveNoticeToDatabaseDlg;
 	m_ui->setupUi(this);
 	m_ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Save");
+	
 	QPushButton *okButton = m_ui->buttonBox->button(QDialogButtonBox::Ok);
 	okButton->setEnabled(false);
 	connect(m_ui->brRegistryNumber_lineEdit, &QLineEdit::textChanged, this, &T_TronSaveNoticeToDatabaseDlg::enableAccept);
@@ -34,6 +35,7 @@ void T_TronSaveNoticeToDatabaseDlg::launchSaveToDBDlg(const T_NtcElect& rNtcElec
 	QDialog::open();
 	QPushButton *okButton = m_ui->buttonBox->button(QDialogButtonBox::Ok);
 	okButton->setEnabled(false);
+	m_ui->brRegistryNumber_lineEdit->clear();
 	m_ui->receivedOn_dateEditWidget->setDate(QDate::currentDate());
 	QString userSystemName = T_Database::getSystemUserName();
 	m_ui->mail_lineEdit->setText(userSystemName.append("@itu.int"));
@@ -62,20 +64,19 @@ void T_TronSaveNoticeToDatabaseDlg::enableAccept()
 void T_TronSaveNoticeToDatabaseDlg::accept()
 {
 
-	RT_TronBRIntern rBRIntern = m_NtcElect.getBRIntern();
+	T_TronBRIntern aBRIntern;
 
 	// Input
-	rBRIntern.setDateRcv(T_DateRcv(QDateTime::currentDateTime()));
-	rBRIntern.setRegistryNo(QVariant(m_ui->brRegistryNumber_lineEdit->text()).toInt());
-	rBRIntern.setInternalRmks(m_ui->remarks_textEdit->toPlainText());
-	qDebug() << rBRIntern.getDateRcv().getDateRcv().date().year();
+	aBRIntern.setDateRcv(T_DateRcv(m_ui->receivedOn_dateEditWidget->getDate()));
+	aBRIntern.setRegistryNo(QVariant(m_ui->brRegistryNumber_lineEdit->text()).toInt());
+	aBRIntern.setInternalRmks(m_ui->remarks_textEdit->toPlainText());
 	// Output
 	T_LogGroupKey aGroupKey;
 
 	bool bAutoCommit = true;
 	T_Database db(m_connectionInfo, T_DBAppRole::PROCESSING);
 	T_TronDBTransaction aTronDBTransaction(db, bAutoCommit);
-	aTronDBTransaction.runStore(getNtcElect(), &aGroupKey);
+	aTronDBTransaction.runStore(aBRIntern, getNtcElect(), &aGroupKey);
 
 	if (m_ui->mail_groupBox->isChecked())
 	{

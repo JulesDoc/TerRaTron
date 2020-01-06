@@ -105,7 +105,7 @@ void T_TronNtcElectWidget::showNotices(QString str)
 			const auto &rcSection = m_NtcElect.getNoticeSectionAt(noticeIndex);
 			int errorCount = rcSection.getErrorCount();
 			int warningCount = rcSection.getWarningCount();
-			if (m_ui->comboBox->currentData().toInt() == ShowMessages && warningCount == 0)
+			if (m_ui->comboBox->currentData().toInt() == ShowMessages && warningCount == 0 && errorCount == 0)
 				item->setHidden(true);
 			if (m_ui->comboBox->currentData().toInt() == ShowErrors && errorCount == 0)
 				item->setHidden(true);
