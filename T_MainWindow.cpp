@@ -39,7 +39,8 @@ void T_MainWindow::initializeGUI()
 {
 	m_ui = new Ui_mainWindow;
 	m_ui->setupUi(this);
-	
+
+	//test
 	statusBar()->showMessage(tr("System is Ready"));
 	m_watcher = new QFileSystemWatcher(this);
 	m_dlg = new T_TronSaveNoticeToDatabaseDlg(getDBBundle().getTerRaBase().getConnectionInfo(), this);
