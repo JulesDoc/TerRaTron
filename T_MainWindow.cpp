@@ -32,6 +32,7 @@ T_MainWindow::~T_MainWindow()
 	m_workerThread->quit();
 	m_workerThread->wait();
 	delete m_ui;
+
 }
 
 void T_MainWindow::initializeGUI()
